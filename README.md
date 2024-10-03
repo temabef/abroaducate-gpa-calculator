@@ -38,7 +38,7 @@ Experience the Abroaducate GPA Calculator: [Live Demo](https://gpa.abroaducate.c
 ---
 
 ### 📜 License
-This project is open-source under the **MIT License**. For more details, see the [LICENSE](LICENSE) file.
+This project is open-source under the **MIT License**. For more details, see the ([LICENSE](https://github.com/temabef/abroaducate-gpa-calculator/blob/main/LICENSE)) file.
 
 ---
 
