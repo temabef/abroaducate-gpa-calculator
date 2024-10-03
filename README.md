@@ -45,7 +45,7 @@ This project is open-source under the **MIT License**. For more details, see the
 ### 👨‍💻 Developer
 Crafted with ❤️ by **Saheed Kolawole**
 
-- **GitHub**: [Saheed Kolawole](https://github.com/yourusername)
+- **GitHub**: [Saheed Kolawole](https://github.com/temabef)
 - **Website**: [Abroaducate.com](https://www.abroaducate.com)
 
 ---
