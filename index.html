@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GPA Conversion Table</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.23/jspdf.plugin.autotable.min.js"></script>
+<style>
+/* General body styling with flexbox to center content */
+body {
+    font-family: 'Arial', sans-serif;
+    background: linear-gradient(135deg, #a1c4fd 0%, #c2e9fb 100%);
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh; /* Ensures the body takes up full viewport height */
+}
+
+/* Container styling */
+.container {
+    max-width: 900px;
+    padding: 40px; /* Added padding to give more space inside the container */
+    background-color: #fff;
+    box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    text-align: center;
+}
+
+/* Headings */
+h1 {
+    font-size: 2.5em;
+    color: #333;
+    margin-bottom: 30px;
+}
+
+label {
+    font-size: 1.1em;
+    color: #555;
+    display: block;
+    margin-bottom: 10px;
+}
+
+/* Dropdown styling */
+select, input[type="text"], input[type="number"] {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 20px;
+    font-size: 1.1em;
+    border-radius: 5px;
+    border: 1px solid #ddd;
+    background-color: #f9f9f9;
+}
+
+select:focus, input:focus {
+    border-color: #007BFF;
+    outline: none;
+    background-color: #fff;
+}
+
+/* Course input row */
+.course {
+    display: flex;
+    gap: 15px;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.course input, .course select {
+    flex: 1;
+}
+
+/* Buttons with colors that match the background gradient */
+button {
+    padding: 12px 20px;
+    font-size: 1.1em;
+    color: white;
+    background-color: #6b73ff; /* Matching the background gradient colors */
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease; /* Transition for hover effect */
+}
+
+/* Hover effect with shadow */
+button:hover {
+    background-color: #5568e5; /* Slightly darker color on hover */
+    box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.2); /* Adds shadow effect */
+}
+
+/* Course button */
+.course button {
+    padding: 10px;
+    font-size: 0.9em;
+    background-color: #6b73ff; /* Matching the general button color */
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    flex-shrink: 0;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.course button:hover {
+    background-color: #5568e5; /* Hover color */
+    box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.2); /* Adds shadow effect */
+}
+
+/* Separate styling for 'Add Course' button */
+button[type="button"] {
+    background-color: #6b73ff; /* Matching the theme */
+    margin-bottom: 20px;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+button[type="button"]:hover {
+    background-color: #5568e5; /* Darker shade */
+    box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.2); /* Shadow on hover */
+}
+
+/* Primary submit button styling */
+button[type="submit"] {
+    background-color: #6b73ff; /* Matching the background */
+    width: 100%;
+    margin-top: 20px;
+    font-weight: bold;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+button[type="submit"]:hover {
+    background-color: #5568e5;
+    box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.2); /* Shadow effect on hover */
+}
+
+
+/* Result Section */
+#gpa-result {
+    margin-top: 40px;
+    font-size: 1.2em;
+    color: #333;
+}
+
+/* Media Query for Mobile Devices */
+@media only screen and (max-width: 768px) {
+    /* Stack course input rows vertically on mobile */
+    .course {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    /* Full-width buttons on mobile for better tapping */
+    button, input, select {
+        width: 100%;
+    }
+
+    /* Larger padding for touchable areas */
+    button {
+        padding: 14px 20px;
+    }
+
+    /* Adjust heading size for mobile */
+    h1 {
+        font-size: 2em;
+    }
+    
+    /* Larger font size for inputs and dropdowns */
+    input, select {
+        font-size: 1.2em;
+    }
+}
+
+/* Footer styling */
+.footer {
+    width: 100%;
+    padding: 30px 20px;
+    text-align: center;
+    color: #333;
+    font-size: 1.1em;
+    border-top: 1px solid #ddd;
+    margin-top: 20px;
+    clear: both; /* Clears any floating elements */
+}
+
+.footer h2 {
+    font-size: 1.5em;
+    margin-bottom: 15px;
+    color: #444;
+}
+
+.footer p {
+    font-size: 1.1em;
+    color: #555;
+    margin: 10px 20px; /* 10px top/bottom, 20px left/right */
+    padding: 0;
+    text-align: center; /* Center the text horizontally */
+}
+
+.footer a {
+    color: #007bff;
+    text-decoration: none;
+}
+
+.footer a:hover {
+    text-decoration: underline;
+}
+</style>
+</head>
+<body>
+    <div class="container">
+        <h1>Abroaducate GPA Calculator</h1>
+
+        <!-- Dropdown for Country Selection (Only Nigeria for now) -->
+        <label for="country">Select Country:</label>
+        <select id="country">
+            <option value="nigeria">Nigeria</option>
+        </select>
+
+        <!-- Dropdown for Grading System Selection -->
+        <label for="gradingSystem">Select Grading System:</label>
+        <select id="gradingSystem" onchange="loadGrades()">
+            <option value="default">Select a Grading Scale</option>
+            <option value="5_point">5.0 Point Scale University</option>
+            <option value="adeleke_university">Adeleke University</option>
+            <option value="auchi_polytechnic">Auchi Polytechnic</option>
+            <option value="babcock_university">Babcock University</option>
+            <option value="federal_polytechnic_bida">Federal Polytechnic, Bida</option>
+            <option value="moshood_abiola_polytechnic">Moshood Abiola Polytechnic</option>
+            <option value="obafemi_awolowo_university">Obafemi Awolowo University</option>
+            <option value="petroleum_training_institute">Petroleum Training Institute</option>
+            <option value="university_of_ibadan">University of Ibadan (4-Point)</option>
+            <option value="university_of_ibadan_7_point">University of Ibadan (7-Point)</option>
+            <option value="university_of_ilorin">University of Ilorin</option>
+            <option value="university_of_nigeria_nsukka">University of Nigeria, Nsukka</option>
+            <option value="university_of_jos">University of Jos</option>
+            <option value="yaba_college_of_technology">Yaba College of Technology</option>
+        </select>
+
+        <!-- Form for Course Inputs -->
+        <form id="gpa-form">
+            <div id="courses">
+                <div class="course">
+                    <input type="text" placeholder="Course Name" name="course[]">
+                    <input type="number" placeholder="Credits" name="credits[]" min="1">
+                    <!-- Grade Dropdown, dynamically populated -->
+                    <select name="grade[]">
+                        <!-- Grades will be dynamically populated based on the selected grading system -->
+                    </select>
+                    <button type="button" onclick="removeCourse(this)">Remove</button>
+                </div>
+            </div>
+
+            <button type="button" onclick="addCourse()">Add Course</button>
+            <button type="submit">Convert to US GPA (4.0 Scale)</button>
+        </form>
+
+        <!-- Result Section -->
+        <div id="gpa-result"></div>
+        <div class="footer">
+            <h2>Abroaducate GPA Calculator</h2>
+            <p>The Abroaducate GPA Calculator is designed to assist students in converting their GPA to the USA's 4.0 grading scale. Whether you're applying to study abroad or need an accurate conversion of your grades, this tool ensures a precise calculation that aligns with US standards.</p>
+            <p>For more information, visit <a href="https://www.abroaducate.com" target="_blank">Abroaducate.com</a></p>
+            <p>Developed by Saheed Kolawole</p>
+        </div>
+    </div>    
+
+    <script>// Conversion scales for various grading systems, now including score ranges for all
+const conversionScales = {
+    '5_point': {
+        'A': { scoreRange: '70-100', usGPA: 4.0 }, 
+        'B': { scoreRange: '60-69', usGPA: 3.5 },  
+        'C': { scoreRange: '50-59', usGPA: 3.0 },
+        'D': { scoreRange: '45-49', usGPA: 2.5 },
+        'E': { scoreRange: '40-44', usGPA: 2.0 },
+        'F': { scoreRange: '0-39', usGPA: 0.0 }
+    },
+    'adeleke_university': {  // New Adeleke University Grading System
+        'A': { scoreRange: '80-100', usGPA: 4.0 }, 
+        'B': { scoreRange: '60-79', usGPA: 3.0 },  
+        'C': { scoreRange: '50-59', usGPA: 2.0 },  
+        'D': { scoreRange: '45-49', usGPA: 1.0 },  
+        'F': { scoreRange: '0-44', usGPA: 0.0 }   
+    },
+    'auchi_polytechnic': {  // New Auchi Polytechnic Grading System
+        'A': { scoreRange: '75-100', usGPA: 4.0 }, 
+        'AB': { scoreRange: '70-74', usGPA: 3.7 },  
+        'B': { scoreRange: '65-69', usGPA: 3.5 },  
+        'BC': { scoreRange: '60-64', usGPA: 3.0 },  
+        'C': { scoreRange: '55-59', usGPA: 2.5 },  
+        'CD': { scoreRange: '50-54', usGPA: 2.0 },  
+        'D': { scoreRange: '45-49', usGPA: 1.5 },  
+        'E': { scoreRange: '40-44', usGPA: 1.0 },  
+        'F': { scoreRange: '0-40', usGPA: 0.0 }   
+    },
+    'babcock_university': {  // New Babcock University Grading System
+        'A': { scoreRange: '80-100', usGPA: 4.0 }, 
+        'B': { scoreRange: '60-79', usGPA: 3.0 },  
+        'C': { scoreRange: '50-59', usGPA: 2.0 },  
+        'D': { scoreRange: '45-49', usGPA: 1.0 },  
+        'E': { scoreRange: '40-44', usGPA: 0.5 },  
+        'F': { scoreRange: '0-39', usGPA: 0.0 }   
+    },
+    'federal_polytechnic_bida': {  // New Federal Polytechnic, Bida Grading System
+        'A': { scoreRange: '4.0', usGPA: 4.0 }, 
+        'AB': { scoreRange: '3.5', usGPA: 3.5 },  
+        'B': { scoreRange: '3.0', usGPA: 3.0 },  
+        'BC': { scoreRange: '2.75', usGPA: 2.75 },  
+        'C': { scoreRange: '2.5', usGPA: 2.5 },  
+        'CD': { scoreRange: '2.25', usGPA: 2.25 },  
+        'D': { scoreRange: '2.0', usGPA: 2.0 },  
+        'F': { scoreRange: '0', usGPA: 0.0 }   
+    },
+    'moshood_abiola_polytechnic': {  // New Moshood Abiola Polytechnic Grading System
+        'A': { scoreRange: '80-100', usGPA: 4.0 }, 
+        'AB': { scoreRange: '75-79.99', usGPA: 3.7 },  
+        'B': { scoreRange: '70-74.99', usGPA: 3.5 },  
+        'BC': { scoreRange: '65-69.99', usGPA: 3.0 },  
+        'C': { scoreRange: '60-64.99', usGPA: 2.5 },  
+        'CD': { scoreRange: '55-59.99', usGPA: 2.0 },  
+        'D': { scoreRange: '50-54.99', usGPA: 1.5 },  
+        'DE': { scoreRange: '45-49.99', usGPA: 1.0 },  
+        'E': { scoreRange: '40-44.99', usGPA: 0.5 },  
+        'EF': { scoreRange: '35-39.99', usGPA: 0.3 },  
+        'FF': { scoreRange: '30-34.99', usGPA: 0.2 },  
+        'F': { scoreRange: '25-29.99', usGPA: 0.0 },  
+        'PF': { scoreRange: '20-24.99', usGPA: 0.0 },  
+        'HF': { scoreRange: '0-19.99', usGPA: 0.0 }   
+    },
+    'obafemi_awolowo_university': {  // New Obafemi Awolowo University Grading System
+        'A': { scoreRange: '70-100', usGPA: 4.0 }, 
+        'B+': { scoreRange: '60-69', usGPA: 3.5 },  
+        'B': { scoreRange: '50-59', usGPA: 3.0 },  
+        'C': { scoreRange: '45-49', usGPA: 2.0 },  
+        'D': { scoreRange: '40-44.99', usGPA: 1.0 },  
+        'F': { scoreRange: '0-39.99', usGPA: 0.0 }   
+    },
+    'petroleum_training_institute': {  // New Petroleum Training Institute Grading System
+        'AA': { scoreRange: '80-100', usGPA: 4.0 }, 
+        'A': { scoreRange: '75-79', usGPA: 3.7 },  
+        'AB': { scoreRange: '70-74', usGPA: 3.5 },  
+        'BB': { scoreRange: '65-69', usGPA: 3.0 },  
+        'B': { scoreRange: '60-64', usGPA: 2.5 },  
+        'BC': { scoreRange: '55-59', usGPA: 2.0 },  
+        'CC': { scoreRange: '50-54', usGPA: 1.7 },  
+        'C': { scoreRange: '45-49', usGPA: 1.5 },  
+        'CD': { scoreRange: '40-44', usGPA: 1.2 },  
+        'DD': { scoreRange: '30-39', usGPA: 1.0 },  
+        'D': { scoreRange: '20-29', usGPA: 0.5 },  
+        'E': { scoreRange: '10-19', usGPA: 0.2 },  
+        'F': { scoreRange: '0-9', usGPA: 0.0 }   
+    },
+    'university_of_ibadan': {  // New University of Ibadan Grading System
+        'A': { scoreRange: '70-100', usGPA: 4.0 }, 
+        'B': { scoreRange: '60-69.99', usGPA: 3.0 },  
+        'C': { scoreRange: '50-59.99', usGPA: 2.0 },  
+        'D': { scoreRange: '45-49.99', usGPA: 1.5 },  
+        'E': { scoreRange: '40-44.99', usGPA: 1.0 },  
+        'F': { scoreRange: '0-39.99', usGPA: 0.0 }   
+    },
+    'university_of_ibadan_7_point': {  // New University of Ibadan (7-point) Grading System
+        'A': { scoreRange: '70-100', usGPA: 4.0 }, 
+        'A-': { scoreRange: '65-69', usGPA: 3.7 },  
+        'B+': { scoreRange: '60-64', usGPA: 3.5 },  
+        'B': { scoreRange: '55-59', usGPA: 3.0 },  
+        'B-': { scoreRange: '50-54', usGPA: 2.5 },  
+        'C+': { scoreRange: '45-49', usGPA: 2.0 },  
+        'C': { scoreRange: '40-44', usGPA: 1.5 },  
+        'D': { scoreRange: '0-39', usGPA: 0.0 }   
+    },
+    'university_of_ilorin': {  // New University of Ilorin Grading System
+        'A': { scoreRange: '70-100', usGPA: 4.0 }, 
+        'B': { scoreRange: '60-69.99', usGPA: 3.0 },  
+        'C': { scoreRange: '50-59.99', usGPA: 2.0 },  
+        'D': { scoreRange: '45-49.99', usGPA: 1.0 },  
+        'F': { scoreRange: '0-44.99', usGPA: 0.0 }   
+    },
+    'university_of_nigeria_nsukka': {  // New University of Nigeria, Nsukka Grading System
+        'A': { scoreRange: '70-100', usGPA: 4.0, interpretation: 'Excellent' }, 
+        'B': { scoreRange: '60-69', usGPA: 3.0, interpretation: 'Very Good' },  
+        'C': { scoreRange: '50-59', usGPA: 2.0, interpretation: 'Good' },  
+        'D': { scoreRange: '45-49', usGPA: 1.5, interpretation: 'Fair' },  
+        'E': { scoreRange: '40-44', usGPA: 1.0, interpretation: 'Pass' },  
+        'F': { scoreRange: '0-39', usGPA: 0.0, interpretation: 'Fail' }   
+    },
+
+    'university_of_jos': {  // New University of Jos Grading System
+        'A': { scoreRange: '70-100', usGPA: 4.0 }, 
+        'B': { scoreRange: '60-69', usGPA: 3.0 },  
+        'C': { scoreRange: '50-59', usGPA: 2.0 },  
+        'D': { scoreRange: '45-49', usGPA: 1.5 },  
+        'E': { scoreRange: '0-44', usGPA: 0.0 }   
+    },
+    'yaba_college_of_technology': {  // New Yaba College of Technology Grading System
+        'A1': { scoreRange: '75-100', usGPA: 4.0 }, 
+        'A2': { scoreRange: '70-74', usGPA: 3.7 },  
+        'B1': { scoreRange: '65-69', usGPA: 3.5 },  
+        'B2': { scoreRange: '60-64', usGPA: 3.0 },  
+        'C1': { scoreRange: '55-59', usGPA: 2.5 },  
+        'C2': { scoreRange: '50-54', usGPA: 2.0 },  
+        'D1': { scoreRange: '45-49', usGPA: 1.5 },  
+        'D2': { scoreRange: '40-44', usGPA: 1.0 },  
+        'F': { scoreRange: '0-39', usGPA: 0.0 }   
+    }
+};
+
+// Function to dynamically load grade options based on the selected grading system
+function loadGrades() {
+    const gradingSystem = document.getElementById('gradingSystem').value;
+    const gradeSelects = document.querySelectorAll('select[name="grade[]"]');
+
+    // Clear and repopulate grade options based on the selected grading system
+    gradeSelects.forEach(select => {
+        select.innerHTML = ''; // Clear existing options
+
+        const selectedScale = conversionScales[gradingSystem]; // Get the grading scale for the selected system
+        for (let grade in selectedScale) {
+            let option = document.createElement('option');
+            // Show only the grade with score range, remove US GPA points
+            option.value = grade;
+            option.textContent = `${grade} (${selectedScale[grade].scoreRange} Score)`;
+            select.appendChild(option);
+        }
+    });
+}
+
+// Add new course row
+function addCourse() {
+    const courseDiv = document.createElement('div');
+    courseDiv.classList.add('course');
+    courseDiv.innerHTML = `
+        <input type="text" placeholder="Course Name" name="course[]">
+        <input type="number" placeholder="Credits" name="credits[]" min="1">
+        <select name="grade[]"></select>
+        <button type="button" onclick="removeCourse(this)">Remove</button>
+    `;
+    document.getElementById('courses').appendChild(courseDiv);
+
+    loadGrades(); // Load the appropriate grades for the new row
+}
+
+// Remove course row
+function removeCourse(button) {
+    const courseDiv = button.parentElement;
+    courseDiv.remove();
+}
+
+// GPA Conversion logic
+// GPA Conversion logic and Transcript generation
+document.getElementById('gpa-form').addEventListener('submit', function (event) {
+    event.preventDefault();
+
+    let totalGradePoints = 0;
+    let totalCredits = 0;
+    let tableRows = [];  // For storing table data
+    let transcriptData = '';  // For HTML display of transcript
+
+    const gradingSystem = document.getElementById('gradingSystem').value;
+    const courses = document.querySelectorAll('input[name="course[]"]');
+    const credits = document.querySelectorAll('input[name="credits[]"]');
+    const grades = document.querySelectorAll('select[name="grade[]"]');
+
+    transcriptData += '<h3>Transcript</h3><table border="1"><tr><th>Course</th><th>Credits</th><th>Grade</th><th>Grade Points</th></tr>';
+
+    for (let i = 0; i < credits.length; i++) {
+        const courseName = courses[i].value;
+        const creditValue = parseFloat(credits[i].value);
+        const gradeValue = conversionScales[gradingSystem][grades[i].value].usGPA;
+        const grade = grades[i].value;
+
+        if (!isNaN(creditValue) && !isNaN(gradeValue)) {
+            totalGradePoints += creditValue * gradeValue;
+            totalCredits += creditValue;
+
+            // Add course data to the transcript table
+            transcriptData += `<tr><td>${courseName}</td><td>${creditValue}</td><td>${grade} (${conversionScales[gradingSystem][grade].scoreRange})</td><td>${gradeValue}</td></tr>`;
+            
+            // Add course data to the AutoTable rows for the PDF
+            tableRows.push([courseName, creditValue, `${grade} (${conversionScales[gradingSystem][grade].scoreRange})`, gradeValue]);
+        }
+    }
+
+    transcriptData += '</table>';
+    const gpa = totalGradePoints / totalCredits;
+
+    if (totalCredits > 0) {
+        transcriptData += `<h3>Your US GPA is: ${gpa.toFixed(2)}</h3>`;
+        tableRows.push(['', '', 'Your US GPA', gpa.toFixed(2)]);  // Add GPA to the PDF table
+    } else {
+        transcriptData += '<h3>Please enter valid course details.</h3>';
+    }
+
+    // Display the transcript
+    document.getElementById('gpa-result').innerHTML = transcriptData;
+
+    // Create a button to download the PDF
+    const downloadButton = document.createElement('button');
+    downloadButton.textContent = 'Download Transcript as PDF';
+    downloadButton.onclick = function () {
+        generatePDF(tableRows, gpa);
+    };
+    document.getElementById('gpa-result').appendChild(downloadButton);
+});
+
+// Function to generate PDF using jsPDF and AutoTable
+function generatePDF(tableRows, gpa) {
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF();
+
+    // Add Title
+    doc.text('Transcript', 14, 10);
+
+    // AutoTable options for creating the transcript table
+    doc.autoTable({
+        head: [['Course', 'Credits', 'Grade', 'Grade Points']],
+        body: tableRows,
+        startY: 20,  // Start the table at this Y position
+        theme: 'striped',  // You can use 'grid', 'plain', or 'striped'
+        headStyles: { fillColor: [100, 100, 255] },  // Header background color
+        margin: { top: 30 },
+    });
+
+    // Save the PDF
+    doc.save('transcript.pdf');
+}</script>
+</body>
+</html>
